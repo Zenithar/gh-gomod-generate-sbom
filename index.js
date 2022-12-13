@@ -27,6 +27,7 @@ const toolCache = require('@actions/tool-cache');
 const input = {
     args: core.getInput('args'),
     version: core.getInput('version'),
+    githubToken: core.getInput('github-token'),
 };
 
 const baseDownloadUrl = 'https://github.com/CycloneDX/cyclonedx-gomod/releases/download';
@@ -60,7 +61,12 @@ function buildDownloadUrl(version) {
 
 async function getReleaseVersionMatchingRange(httpClient, range) {
     core.info(`Determining latest release version of cyclonedx-gomod satisfying "${range}"`);
-    const responseJson = await httpClient.getJson('https://api.github.com/repos/CycloneDX/cyclonedx-gomod/releases');
+    const responseJson = await httpClient.getJson(
+        'https://api.github.com/repos/CycloneDX/cyclonedx-gomod/releases',
+        input.githubToken
+          ? { Authorization: input.githubToken, ...{} }
+          : {}
+    );
     if (responseJson === null) { // HTTP 404
         throw new Error('Fetching latest release of cyclonedx-gomod failed: not found');
     } else if (responseJson.statusCode !== 200) {

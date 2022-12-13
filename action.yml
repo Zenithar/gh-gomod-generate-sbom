@@ -15,6 +15,10 @@ inputs:
       Can be a version range, in which case the latest version matching the range is chosen.
       Minimum allowed version is v1.0.0. Must either be an existing semantic version (e.g. v1.0.0, 1.0.0) or a version range.
     required: true
+  github-token:
+    description: |
+      GitHub access token used to get information from the GitHub API.
+    required: true
 runs:
-  using: 'node12'
+  using: 'node18'
   main: 'index.js'
